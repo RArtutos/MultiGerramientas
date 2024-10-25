@@ -4,20 +4,14 @@ import QRCode from 'qrcode.react';
 export default function QRCodeGenerator() {
   const [text, setText] = useState('');
   const [qrSize, setQrSize] = useState(256);
+  const [qrDataUrl, setQrDataUrl] = useState('');
 
-  const downloadQR = () => {
+  const generateQRCodeDataUrl = () => {
     const canvas = document.getElementById('qr-code') as HTMLCanvasElement;
     if (!canvas) return;
 
-    const pngUrl = canvas
-      .toDataURL('image/png')
-      .replace('image/png', 'image/octet-stream');
-    const downloadLink = document.createElement('a');
-    downloadLink.href = pngUrl;
-    downloadLink.download = 'qrcode.png';
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+    const pngUrl = canvas.toDataURL('image/png');
+    setQrDataUrl(pngUrl); // Establece la URL Base64 de la imagen para que el usuario la guarde manualmente
   };
 
   return (
@@ -60,11 +54,18 @@ export default function QRCodeGenerator() {
 
         {text && (
           <button
-            onClick={downloadQR}
+            onClick={generateQRCodeDataUrl}
             className="w-full py-2 bg-yellow-600 rounded-lg hover:bg-yellow-500 transition-colors"
           >
-            Download QR Code
+            Show QR Code to Save
           </button>
+        )}
+
+        {qrDataUrl && (
+          <div className="mt-4 text-center">
+            <p className="text-sm">Long press on the QR image to save it.</p>
+            <img src={qrDataUrl} alt="Generated QR Code" className="mx-auto" />
+          </div>
         )}
       </div>
     </div>

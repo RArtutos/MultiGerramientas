@@ -4,18 +4,6 @@ import QRCode from 'qrcode.react';
 export default function QRCodeGenerator() {
   const [text, setText] = useState('');
   const [qrSize, setQrSize] = useState(256);
-  const [qrDataUrl, setQrDataUrl] = useState('');
-
-  const openQrInNewTab = () => {
-    const canvas = document.getElementById('qr-code') as HTMLCanvasElement;
-    if (!canvas) return;
-
-    const pngUrl = canvas.toDataURL('image/png');
-    const newTab = window.open();
-    if (newTab) {
-      newTab.document.body.innerHTML = `<img src="${pngUrl}" alt="QR Code" style="max-width: 100%; height: auto;" />`;
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -56,12 +44,9 @@ export default function QRCodeGenerator() {
         </div>
 
         {text && (
-          <button
-            onClick={openQrInNewTab}
-            className="w-full py-2 bg-yellow-600 rounded-lg hover:bg-yellow-500 transition-colors"
-          >
-            Open QR Code in New Tab
-          </button>
+          <p className="text-center text-sm text-gray-500 mt-4">
+            Take a screenshot to save the QR code.
+          </p>
         )}
       </div>
     </div>

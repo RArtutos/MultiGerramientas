@@ -5,18 +5,19 @@ export default function QRCodeGenerator() {
   const [text, setText] = useState('');
   const [qrSize, setQrSize] = useState(256);
 
-  const viewQR = () => {
+  const downloadQR = () => {
     const canvas = document.getElementById('qr-code') as HTMLCanvasElement;
     if (!canvas) return;
 
-    // Convertimos el canvas a blob y luego creamos una URL temporal de ese blob
-    canvas.toBlob((blob) => {
-      if (!blob) return;
-      const url = URL.createObjectURL(blob);
-
-      // Abre la URL en una nueva pestaña
-      window.open(url, '_blank');
-    });
+    const pngUrl = canvas
+      .toDataURL('image/png')
+      .replace('image/png', 'image/octet-stream');
+    const downloadLink = document.createElement('a');
+    downloadLink.href = pngUrl;
+    downloadLink.download = 'qrcode.png';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   };
 
   return (
@@ -59,10 +60,10 @@ export default function QRCodeGenerator() {
 
         {text && (
           <button
-            onClick={viewQR}
+            onClick={downloadQR}
             className="w-full py-2 bg-yellow-600 rounded-lg hover:bg-yellow-500 transition-colors"
           >
-            View QR Code
+            Download QR Code
           </button>
         )}
       </div>

@@ -6,12 +6,15 @@ export default function QRCodeGenerator() {
   const [qrSize, setQrSize] = useState(256);
   const [qrDataUrl, setQrDataUrl] = useState('');
 
-  const generateQRCodeDataUrl = () => {
+  const openQrInNewTab = () => {
     const canvas = document.getElementById('qr-code') as HTMLCanvasElement;
     if (!canvas) return;
 
     const pngUrl = canvas.toDataURL('image/png');
-    setQrDataUrl(pngUrl); // Establece la URL Base64 de la imagen para que el usuario la guarde manualmente
+    const newTab = window.open();
+    if (newTab) {
+      newTab.document.body.innerHTML = `<img src="${pngUrl}" alt="QR Code" style="max-width: 100%; height: auto;" />`;
+    }
   };
 
   return (
@@ -54,18 +57,11 @@ export default function QRCodeGenerator() {
 
         {text && (
           <button
-            onClick={generateQRCodeDataUrl}
+            onClick={openQrInNewTab}
             className="w-full py-2 bg-yellow-600 rounded-lg hover:bg-yellow-500 transition-colors"
           >
-            Show QR Code to Save
+            Open QR Code in New Tab
           </button>
-        )}
-
-        {qrDataUrl && (
-          <div className="mt-4 text-center">
-            <p className="text-sm">Long press on the QR image to save it.</p>
-            <img src={qrDataUrl} alt="Generated QR Code" className="mx-auto" />
-          </div>
         )}
       </div>
     </div>
